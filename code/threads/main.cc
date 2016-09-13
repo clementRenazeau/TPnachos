@@ -129,8 +129,22 @@ main (int argc, char **argv)
 		      ConsoleTest (*(argv + 1), *(argv + 2));
 		      argCount = 3;
 		  }
+		}	
+#ifdef CHANGED
+	else if (!strcmp (*argv, "-sc")){
+		if (argc == 1)
+		    SynchConsoleTest (NULL, NULL);
+		else
+		  {
+		      ASSERT (argc > 2);
+		      SynchConsoleTest (*(argv + 1), *(argv + 2));
+		      argCount = 3;
+		  }
 	    }
+#endif //CHANGED
 #endif // USER_PROGRAM
+
+
 #ifdef FILESYS
 	  if (!strcmp (*argv, "-cp"))
 	    {			// copy from UNIX to Nachos

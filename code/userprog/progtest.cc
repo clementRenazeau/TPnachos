@@ -13,6 +13,7 @@
 #include "console.h"
 #include "addrspace.h"
 #include "synch.h"
+#include "synchconsole.h"
 
 //----------------------------------------------------------------------
 // StartProcess
@@ -84,9 +85,34 @@ ConsoleTest (const char *in, const char *out)
     readAvail = new Semaphore ("read avail", 0);
     writeDone = new Semaphore ("write done", 0);
     console = new Console (in, out, ReadAvailHandler, WriteDoneHandler, 0);
-
+#ifdef CHANGED
     for (;;)
       {
+	  readAvail->P ();	// wait for character to arrive
+	  ch = console->GetChar ();
+	  if (ch == EOF) {
+	      printf ("Au revoir\n");
+	      break;
+	  }
+	  if (ch != '\n'){
+	  	console->PutChar ('<');
+	  	writeDone->P ();
+	  }
+	  console->PutChar (ch);	// echo it!
+	  writeDone->P ();	// wait for write to finish
+	  if (ch != '\n'){
+	  	console->PutChar ('>');
+	  	writeDone->P ();
+	  }
+	  if (ch == 'q') {
+	      printf ("Nothing more, bye!\n");
+	      break;		// if q, quit
+	  }  
+
+      }
+#else
+     for (;;)
+      	{
 	  readAvail->P ();	// wait for character to arrive
 	  ch = console->GetChar ();
 	  console->PutChar (ch);	// echo it!
@@ -94,9 +120,28 @@ ConsoleTest (const char *in, const char *out)
 	  if (ch == 'q') {
 	      printf ("Nothing more, bye!\n");
 	      break;		// if q, quit
-	  }
+	  }  
+
       }
+#endif //CHANGED
     delete console;
     delete readAvail;
     delete writeDone;
 }
+#ifdef CHANGED
+void SynchConsoleTest (const char *in, const char *out){
+	char ch;
+	SynchConsole *test_synchconsole = new SynchConsole(in, out);
+	while ((ch = test_synchconsole->SynchGetChar()) != EOF){
+		if (ch != '\n'){
+			test_synchconsole->SynchPutChar('<');
+	  	}
+		test_synchconsole->SynchPutChar(ch);
+		 if (ch != '\n'){
+			test_synchconsole->SynchPutChar('>');
+	  	}
+	}
+	fprintf(stderr, "EOF detected in SynchConsole!\n");
+	delete test_synchconsole;
+}
+#endif //CHANGED
