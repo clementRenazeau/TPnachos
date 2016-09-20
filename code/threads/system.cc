@@ -96,6 +96,7 @@ Initialize (int argc, char **argv)
     bool debugUserProg = FALSE;	// single step user program
 #ifdef CHANGED
     synchConsole = new SynchConsole (NULL, NULL);
+    stringBuffer = new char[MAX_STRING_SIZE+1];
 #endif //CHANGED
 #endif  
 #ifdef FILESYS_NEEDED
@@ -229,6 +230,8 @@ Cleanup ()
 #ifdef USER_PROGRAM
     delete synchConsole;
     synchConsole = NULL;
+    delete stringBuffer;
+    stringBuffer = NULL;
 #endif
 #endif
     

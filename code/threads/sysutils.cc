@@ -1,3 +1,4 @@
+#ifdef USER_PROGRAM
 #include "sysutils.h"
 #include "system.h"
 
@@ -12,3 +13,4 @@ int copyStringFromMachine(int from, char *to, unsigned int size) {
     to[pos] = 0;
     return pos;
 }
+#endif
