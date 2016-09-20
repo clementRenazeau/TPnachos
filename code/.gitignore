@@ -1,0 +1,13 @@
+*.o
+*.d
+bin/
+test/halt
+test/halt.coff
+test/matmult
+test/matmult.coff
+test/shell
+test/shell.coff
+test/sort
+test/sort.coff
+threads/nachos
+userprog/nachos
