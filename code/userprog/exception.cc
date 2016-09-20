@@ -67,43 +67,52 @@ UpdatePC ()
 void
 ExceptionHandler (ExceptionType which)
 {
-    int type = machine->ReadRegister (2);
+  int type = machine->ReadRegister (2);
 
-    switch (which)
+  switch (which)
+    {
+    case SyscallException:
       {
-	case SyscallException:
-          {
-	    switch (type)
-	      {
-		case SC_Halt:
-		  {
-		    DEBUG ('s', "Shutdown, initiated by user program.\n");
-		    interrupt->Halt ();
-		    break;
-		  }
-		default:
-		  {
-		    printf("Unimplemented system call %d\n", type);
-		    ASSERT(FALSE);
-		  }
-	      }
-
-	    // Do not forget to increment the pc before returning!
-	    UpdatePC ();
-	    break;
+	switch (type)
+	  {
+	  case SC_Halt:
+	    {
+	      DEBUG ('s', "Shutdown, initiated by user program.\n");
+	      interrupt->Halt ();
+	      break;
+	    }
+#ifdef CHANGED
+	  case SC_PutChar:
+	    {
+	      DEBUG ('s', "PutChar\n");
+	      int c = machine->ReadRegister(4);
+	      synchConsole->SynchPutChar(c);
+	      break;
+	    }
+#endif //CHANGED
+	  default:
+	    {
+	      printf("Unimplemented system call %d\n", type);
+	      ASSERT(FALSE);
+	    }
 	  }
 
-	case PageFaultException:
-	  if (!type) {
-	    printf("NULL dereference at PC %x!\n", machine->registers[PCReg]);
-	    ASSERT (FALSE);
-	  } else {
-	    printf ("Page Fault at address %x at PC %x\n", type, machine->registers[PCReg]);
-	    ASSERT (FALSE);	// For now
-	  }
-
-	default:
-	  printf ("Unexpected user mode exception %d %d at PC %x\n", which, type, machine->registers[PCReg]);
-	  ASSERT (FALSE);
+	// Do not forget to increment the pc before returning!
+	UpdatePC ();
+	break;
       }
+
+    case PageFaultException:
+      if (!type) {
+	printf("NULL dereference at PC %x!\n", machine->registers[PCReg]);
+	ASSERT (FALSE);
+      } else {
+	printf ("Page Fault at address %x at PC %x\n", type, machine->registers[PCReg]);
+	ASSERT (FALSE);	// For now
+      }
+
+    default:
+      printf ("Unexpected user mode exception %d %d at PC %x\n", which, type, machine->registers[PCReg]);
+      ASSERT (FALSE);
+    }
 }

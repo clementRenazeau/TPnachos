@@ -35,6 +35,12 @@ SynchDisk *synchDisk;
 Machine *machine;		// user program memory and registers
 #endif
 
+#ifdef CHANGED
+#ifdef USER_PROGRAM
+SynchConsole *synchConsole;
+#endif
+#endif
+
 #ifdef NETWORK
 PostOffice *postOffice;
 #endif
@@ -88,7 +94,10 @@ Initialize (int argc, char **argv)
 
 #ifdef USER_PROGRAM
     bool debugUserProg = FALSE;	// single step user program
-#endif
+#ifdef CHANGED
+    synchConsole = new SynchConsole (NULL, NULL);
+#endif //CHANGED
+#endif  
 #ifdef FILESYS_NEEDED
     bool format = FALSE;	// format disk
 #endif
@@ -216,6 +225,13 @@ Cleanup ()
     machine = NULL;
 #endif
 
+#ifdef CHANGED
+#ifdef USER_PROGRAM
+    delete synchConsole;
+    synchConsole = NULL;
+#endif
+#endif
+    
 #ifdef FILESYS_NEEDED
     delete fileSystem;
     fileSystem = NULL;
