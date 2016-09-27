@@ -84,6 +84,13 @@ ExceptionHandler (ExceptionType which)
 	      break;
 	    }
 #ifdef CHANGED
+	  case SC_Exit:
+	    {
+	      DEBUG ('s', "Shutdown, initiated by user program.\n");
+	      int returnValue = machine->ReadRegister(4);
+	      interrupt->Halt ();
+	      break;
+	    }
 	  case SC_PutChar:
 	    {
 	      DEBUG ('s', "PutChar\n");
