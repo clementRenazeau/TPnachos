@@ -88,6 +88,7 @@ ExceptionHandler (ExceptionType which)
 	    {
 	      DEBUG ('s', "Shutdown, initiated by user program.\n");
 	      int returnValue = machine->ReadRegister(4);
+              printf("\nExited with code %d\n", returnValue);
 	      interrupt->Halt ();
 	      break;
 	    }

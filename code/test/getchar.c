@@ -2,5 +2,5 @@
 int main() {
 	int c = GetChar();
 	PutChar(c);
-	return 0;
+	return 1;
 }
