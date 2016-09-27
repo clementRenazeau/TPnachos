@@ -33,7 +33,9 @@
 	.ent	__start
 __start:
 	jal	main
+#ifdef CHANGED
 	move $4,$2
+#endif // CHANGED
 	jal	Exit	 /* if we return from main, exit(0) */
 	.end __start
 
