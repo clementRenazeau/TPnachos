@@ -31,7 +31,13 @@ void SynchConsole::SynchPutString(const char s[]){
     this->SynchPutChar(s[i]);
   }
 }
-void SynchConsole::SynchGetString(char *s, int n){
-    int currentChar = this->SynchGetChar();
+void SynchConsole::SynchGetString(char *string, int n){
+  int currentChar;
+  int pos = 0;
+  while(pos < n && (currentChar = this->SynchGetChar()) != EOF) {
+    string[pos] = currentChar;
+    pos++;
+  }
+  string[pos] = 0;
 }
 #endif // CHANGED
