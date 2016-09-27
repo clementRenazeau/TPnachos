@@ -24,7 +24,9 @@
 #include "copyright.h"
 #include "system.h"
 #include "syscall.h"
-
+#ifdef CHANGED
+#include "sysutils.h"
+#endif
 //----------------------------------------------------------------------
 // UpdatePC : Increments the Program Counter register in order to resume
 // the user program immediately after the "syscall" instruction.
@@ -88,6 +90,13 @@ ExceptionHandler (ExceptionType which)
 	      int c = machine->ReadRegister(4);
 	      synchConsole->SynchPutChar(c);
 	      break;
+	    }
+	  case SC_PutString:
+	    {
+	      DEBUG ('s', "PutString\n");
+	      int from = machine->ReadRegister(4);
+	      copyStringFromMachine(from, stringBuffer, MAX_STRING_SIZE);
+	      synchConsole->SynchPutString(stringBuffer);
 	    }
 #endif //CHANGED
 	  default:
