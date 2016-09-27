@@ -32,6 +32,6 @@ void SynchConsole::SynchPutString(const char s[]){
   }
 }
 void SynchConsole::SynchGetString(char *s, int n){
-  // ...
+    int currentChar = this->SynchGetChar();
 }
 #endif // CHANGED
