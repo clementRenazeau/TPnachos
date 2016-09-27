@@ -10,6 +10,6 @@ void print(char c, int n){
 }
 int main(){
   print('a',4);
-  PutString("abc\n");
+  PutString("abcde\n");
   Halt();
 }

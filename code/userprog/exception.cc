@@ -95,8 +95,10 @@ ExceptionHandler (ExceptionType which)
 	    {
 	      DEBUG ('s', "PutString\n");
 	      int from = machine->ReadRegister(4);
+	      char stringBuffer[MAX_STRING_SIZE];
 	      copyStringFromMachine(from, stringBuffer, MAX_STRING_SIZE);
 	      synchConsole->SynchPutString(stringBuffer);
+	      break;
 	    }
 #endif //CHANGED
 	  default:

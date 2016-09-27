@@ -39,7 +39,6 @@ extern Machine *machine;	// user program memory and registers
 #include "synchconsole.h"
 extern SynchConsole *synchConsole;     
 #define MAX_STRING_SIZE 4
-extern char *stringBuffer;
 #endif
 #endif
 
