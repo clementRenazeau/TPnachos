@@ -8,36 +8,36 @@ static Semaphore *writeDone;
 static void ReadAvailHandler(void *arg) { (void) arg; readAvail->V(); }
 static void WriteDoneHandler(void *arg) { (void) arg; writeDone->V(); }
 SynchConsole::SynchConsole(const char *in, const char *out){
-  readAvail = new Semaphore("read avail", 0);
-  writeDone = new Semaphore("write done", 0);
-  console = new Console (in, out, ReadAvailHandler, WriteDoneHandler, 0);
+    readAvail = new Semaphore("read avail", 0);
+    writeDone = new Semaphore("write done", 0);
+    console = new Console (in, out, ReadAvailHandler, WriteDoneHandler, 0);
 }
 SynchConsole::~SynchConsole(){
-  delete console;
-  delete writeDone;
-  delete readAvail;
+    delete console;
+    delete writeDone;
+    delete readAvail;
 }
 void SynchConsole::SynchPutChar(int ch){
-  console->PutChar (ch);	
-  writeDone->P ();
+    console->PutChar (ch);
+    writeDone->P ();
 
 }
 int SynchConsole::SynchGetChar(){
-  readAvail->P ();
-  return console->GetChar ();
+    readAvail->P ();
+    return console->GetChar ();
 }
 void SynchConsole::SynchPutString(const char s[]){
-  for(int i=0; s[i] != 0; ++i){
-    this->SynchPutChar(s[i]);
-  }
+    for(int i=0; s[i] != 0; ++i){
+        this->SynchPutChar(s[i]);
+    }
 }
 void SynchConsole::SynchGetString(char *string, int n){
-  int currentChar;
-  int pos = 0;
-  while(pos < n && (currentChar = this->SynchGetChar()) != EOF) {
-    string[pos] = currentChar;
-    pos++;
-  }
-  string[pos] = 0;
+    int currentChar;
+    int pos = 0;
+    while(pos < n && (currentChar = this->SynchGetChar()) != EOF) {
+        string[pos] = currentChar;
+        pos++;
+    }
+    string[pos] = 0;
 }
 #endif // CHANGED
