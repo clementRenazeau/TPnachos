@@ -115,6 +115,16 @@ ExceptionHandler (ExceptionType which)
               machine->WriteRegister(2, character);
               break;
             }
+	  case SC_GetString:
+	    {
+	      DEBUG('s', "GetString\n");
+	      int to = machine->ReadRegister(4);
+	      char stringBuffer[MAX_STRING_SIZE];
+	      int size = synchConsole->SynchGetString(stringBuffer, MAX_STRING_SIZE);
+	      copyStringToMachine(to, stringBuffer, size);
+	      break;
+	    }
+	    
 #endif //CHANGED
 	  default:
 	    {
