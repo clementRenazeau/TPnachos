@@ -9,7 +9,8 @@ void print(char c, int n){
 
 }
 int main(){
-  print('a',4);
-  PutString("abcde\n");
-  Halt();
+  PutString("1234567\n");
+  PutString("1aazer\n"); 
+  PutString("1wxcvb\n");
+  return 0;
 }

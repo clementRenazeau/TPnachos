@@ -103,9 +103,13 @@ ExceptionHandler (ExceptionType which)
 	    {
 	      DEBUG ('s', "PutString\n");
 	      int from = machine->ReadRegister(4);
-	      char stringBuffer[MAX_STRING_SIZE];
-	      copyStringFromMachine(from, stringBuffer, MAX_STRING_SIZE);
-	      synchConsole->SynchPutString(stringBuffer);
+	      char stringBuffer[MAX_STRING_SIZE+1];
+	      int nbChar;
+	      do{
+		nbChar = copyStringFromMachine(from, stringBuffer, MAX_STRING_SIZE);
+		synchConsole->SynchPutString(stringBuffer);
+		from+=MAX_STRING_SIZE;
+	      }while(nbChar != 0);
 	      break;
 	    }
           case SC_GetChar:
