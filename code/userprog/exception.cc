@@ -88,7 +88,7 @@ ExceptionHandler (ExceptionType which)
 	    {
 	      DEBUG ('s', "Shutdown, initiated by user program.\n");
 	      int returnValue = machine->ReadRegister(4);
-              printf("\nExited with code %d\n", returnValue);
+          printf("\nExited with code %d\n", returnValue);
 	      interrupt->Halt ();
 	      break;
 	    }
@@ -124,7 +124,6 @@ ExceptionHandler (ExceptionType which)
 	      copyStringToMachine(to, stringBuffer, size);
 	      break;
 	    }
-	    
 #endif //CHANGED
 	  default:
 	    {
