@@ -13,7 +13,7 @@ int copyStringFromMachine(int from, char *to, unsigned int size) {
     to[pos] = 0;
     return pos;
 }
-int copyStringToMachine(int to, char* from, unsigned int size){
+void copyStringToMachine(int to, char* from, unsigned int size){
   unsigned int pos = 0;
   for(; from[pos] != 0 && (pos < size) ; ++pos) {
     machine->WriteMem(to+pos, 1, from[pos]);
