@@ -119,9 +119,11 @@ ExceptionHandler (ExceptionType which)
 	    {
 	      DEBUG('s', "GetString\n");
 	      int to = machine->ReadRegister(4);
-	      char stringBuffer[MAX_STRING_SIZE];
-	      int size = synchConsole->SynchGetString(stringBuffer, MAX_STRING_SIZE);
+	      int n = machine->ReadRegister(5);
+	      char* stringBuffer = new char[n];
+	      int size = synchConsole->SynchGetString(stringBuffer, n);
 	      copyStringToMachine(to, stringBuffer, size);
+	      delete stringBuffer;
 	      break;
 	    }
 #endif //CHANGED
