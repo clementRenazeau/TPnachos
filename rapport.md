@@ -7,12 +7,16 @@
 
 ## Bilan
 
-Dans cette première partie il nous a été demandé de découvrir le fonctionnement de Nachos par une étude préalable, en surface du code, pour ensuite nous lancer dans l’implémentation de la synchronisation des entrées et des sorties. Pour ce faire il a fallu ajouter un certain nombre de fichiers comme demandé dans le fascicule de TD. 
+Dans cette première partie il nous a été demandé de découvrir le fonctionnement de Nachos par une étude préalable, en surface du code, pour ensuite nous lancer dans l’implémentation de la des entrées/sorties en mode synchrone.
+Pour ce faire il a fallu ajouter un certain nombre de fichiers comme demandé dans le fascicule de TD, à savoir:
 
-- sysutils
-- synchgetstring renvoie int au lieu de void
-- halt → exit
-- copyStringFromMachine
+* `userprog/synchConsole`, une classe qui gère les entrées/sorties consoles en mode synchrone, en encapsulant la classe Console qui fonctionne de manière asynchrone.
+    * Il faut noter que l'implémentation de la fonction SynchGetString de cette classe diffère de celle proposée par l'énoncer du TP: elle retourne le nombre de caractères copiés dans le buffer de sortie, afin de faciliter son utilisation.
+* `threads/sysutils`, qui regroupe des fonctions utilitaires systèmes facilitant la communication noyau/programme utilisateur depuis le noyau. C'est dans ce fichier que sont implémentés:
+    * copyStringFromMachine, la fonction permettant de copier une chaîne de caractères depuis l'espace utilisateur MIPS vers l'espace noyau.
+    * copyStringToMachine, la fonction permettant de copier une chaîne de caractères depuis l'espace noyau vers l'espace utilisateur MIPS.
+
+* halt → exit
 
 ## Points délicats
 
