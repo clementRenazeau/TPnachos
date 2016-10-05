@@ -12,7 +12,7 @@ Pour ce faire il a fallu ajouter un certain nombre de fichiers comme demandé da
 
 * `userprog/synchConsole`, une classe qui gère les entrées/sorties consoles en mode synchrone, en encapsulant la classe Console qui fonctionne de manière asynchrone.
     * Il faut noter que l'implémentation de la fonction SynchGetString de cette classe diffère de celle proposée par l'énoncer du TP: elle retourne le nombre de caractères copiés dans le buffer de sortie, afin de faciliter son utilisation.
-* `threads/sysutils`, qui regroupe des fonctions utilitaires systèmes facilitant la communication noyau/programme utilisateur depuis le noyau. C'est dans ce fichier que sont implémentés:
+* `threads/sysutils`, qui regroupe des fonctions utilitaires systèmes facilitant la communication noyau/programme utilisateur depuis le noyau. Nous avons décidé de les mettre dans un fichier séparé du reste du système pour une réutilisation simplifiée et éventuellement pouvoir ajouter de manière visible de nouvelles fonctions dans la suite du projet si le besoin s'en fait sentir. C'est dans ce fichier que sont implémentés:
     * copyStringFromMachine, la fonction permettant de copier une chaîne de caractères depuis l'espace utilisateur MIPS vers l'espace noyau.
     * copyStringToMachine, la fonction permettant de copier une chaîne de caractères depuis l'espace noyau vers l'espace utilisateur MIPS.
 
@@ -20,18 +20,18 @@ Pour ce faire il a fallu ajouter un certain nombre de fichiers comme demandé da
 
 ## Points délicats
 
-Le début de l’implémentation étant assez simple, c’est finalement les dernières méthodes qui se sont révélés les plus ardus à implémenter. Notamment les méthodes « SynchGetString » et « SynchPutString ».
-Nous avons buté un moment sur les indices et le positionnement du caractère 'EOF' à la fin des chaînes de caractères.
+Le début de l’implémentation étant assez simple, c’est finalement les dernières méthodes qui se sont révélés les plus ardus à implémenter. Notamment les méthodes `SynchGetString` et `SynchPutString`.
+Nous avons buté un moment sur les indices et le bon positionnement du caractère `NULL` à la fin des chaînes de caractères.
 
 ## Limitations
 
-Pour le moment les méthodes optionnelles de la première partie n'ont pas encore été implémentées par manque de temps. Nous n'avons pas encore étudié les accès concurrents sur le « GetString », en conséquence il n'est pas encore envisageable d'utiliser les "threads" utilisateur, pour l'instant. Les paramètres introduits (tel que "MAX_STRING_SIZE") ne sont pas externalisés et il pourrait être intéressant de le faire pour permettre une utilisation plus agréable et fléxible du système. 
+Pour le moment les méthodes optionnelles de la première partie n'ont pas encore été implémentées par manque de temps. Nous n'avons pas encore étudié les accès concurrents sur le `GetString`, en conséquence il n'est pas encore envisageable d'utiliser les `threads` utilisateur, pour l'instant. Les paramètres introduits (tel que `MAX_STRING_SIZE`) ne sont pas externalisés et il pourrait être intéressant de le faire pour permettre une utilisation plus agréable et fléxible du système. 
 
 ## Tests
 
-Pour le moment les tests réalisés sont relativement simplistes et sont là pour s’assurer qu’une utilisation classique du système ne crée pas de problèmes. Ils consistent principalement à la création de fichiers similaire à "putchar.c" mais avec des appels à des fonctions différentes pour pouvoir tester les méthodes dans des conditions normales d'utilisations. Par exemple, tester l'écriture via "putString" de chaînes de caractères plus ou moins longue que la définition de la taille maximum des chaines de caractère ("MAX_STRING_SIZE").
+Pour le moment les tests réalisés sont relativement simplistes et sont là pour s’assurer qu’une utilisation classique du système ne crée pas de problèmes. Ils consistent principalement à la création de fichiers similaire à `putchar.c` mais avec des appels à des fonctions différentes pour pouvoir tester les méthodes dans des conditions normales d'utilisations. Par exemple, tester l'écriture via `putString` de chaînes de caractères plus ou moins longue que la définition de la taille maximum des chaines de caractère (`MAX_STRING_SIZE`).
 
-Le test suivant permet de mettre en évidence le fait que 
+Le test suivant permet de mettre en évidence le fait que notre implémentation s'arrête bien quand `GetString` rencontre le caractère de fin de chaîne.
 
     echo  "c" | ./userprog/nachos -d s -x ./test/getstring
     GetString
