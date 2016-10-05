@@ -28,7 +28,7 @@ endif
 ifeq ($(NACHOS_SYS),LINUX_SYS)
 # Linux: fill in with the full path to the binutils and gcc.
 # For instance:
-GCCDIR	= /net/cremi/aguermou/xgcc/decstation-ultrix/bin
+GCCDIR	= /home/thomas/.softwares/mips-x86.linux-xgcc
 endif
 
 ifeq ($(NACHOS_SYS),MAC_OS_SYS)
@@ -48,17 +48,20 @@ CPPFLAGS = $(INCDIR) -DCHANGED
 # CPPFLAGS = -P $(INCDIR)
 
 
-CC	:=	$(GCCDIR)/gcc
-AS	:=	$(GCCDIR)/as
-LD	:=	$(GCCDIR)/ld
+export ARCHDIR=$(GCCDIR)
+CC	:=	$(GCCDIR)/mips-gcc
+AS	:=	$(GCCDIR)/mips-as
+LD	:=	$(GCCDIR)/mips-ld
 OBJDUMP	:=	$(GCCDIR)/objdump
 
-CPP	:=	$(GCCDIR)/gcc -E -P
+CPP	:=	$(GCCDIR)/mips-gcc -E -P
 INCDIR	:=	-I../userprog -I../threads
 CFLAGS 	:=	-DIN_USER_MODE -c $(INCDIR) -G 0 -Wall -O2 -DCHANGED
 
 SOURCES	:=	$(wildcard *.c)
 PROGS	:=	$(patsubst %.c,%,$(SOURCES))
+
+export PATH := $(GCCDIR):$(PATH)
 
 .PHONY: all
 
