@@ -11,12 +11,18 @@ Dans cette première partie il nous a été demandé de découvrir le fonctionne
 Pour ce faire il a fallu ajouter un certain nombre de fichiers comme demandé dans le fascicule de TD, à savoir:
 
 * `userprog/synchConsole`, une classe qui gère les entrées/sorties consoles en mode synchrone, en encapsulant la classe Console qui fonctionne de manière asynchrone.
-    * Il faut noter que l'implémentation de la fonction SynchGetString de cette classe diffère de celle proposée par l'énoncer du TP: elle retourne le nombre de caractères copiés dans le buffer de sortie, afin de faciliter son utilisation.
+    * Il faut noter que l'implémentation de la fonction SynchGetString de cette classe diffère de celle proposée par l'énoncer du TP:
+    elle retourne le nombre de caractères copiés dans le buffer de sortie, afin de faciliter son utilisation.
 * `threads/sysutils`, qui regroupe des fonctions utilitaires systèmes facilitant la communication noyau/programme utilisateur depuis le noyau. C'est dans ce fichier que sont implémentés:
     * copyStringFromMachine, la fonction permettant de copier une chaîne de caractères depuis l'espace utilisateur MIPS vers l'espace noyau.
     * copyStringToMachine, la fonction permettant de copier une chaîne de caractères depuis l'espace noyau vers l'espace utilisateur MIPS.
 
-* halt → exit
+D'autres fichiers ont dus être modifiés pour répondre aux questions du TP:
+
+ * `test/Start.S` qui contient le code assembleur chargé d'effectuer les appels systèmes, mais également de définir la fonction `\_start` qui est le réel point d'entré d'un programme C.
+   C'est également ce point d'entré qui retourne la valeur retournée par la fonction `main` du programme vers le noyau.
+   Dans l'implémentation originale, cette valeur était perdue, dans notre version elle a été sauvegardée dans le registre 4.
+   De plus la gestion de l'exception SC_Exit correspondante n'avait pas été implémentée. Cela a été corrigé.
 
 ## Points délicats
 
@@ -33,8 +39,10 @@ Pour le moment les tests réalisés sont relativement simplistes et sont là pou
 
 Le test suivant permet de mettre en évidence le fait que 
 
-    echo  "c" | ./userprog/nachos -d s -x ./test/getstring
-    GetString
-    PutString
-    c
-    Shutdown, initiated by user program.
+```bash
+$ echo  "c" | ./userprog/nachos -d s -x ./test/getstring
+GetString
+PutString
+c
+Shutdown, initiated by user program.
+```
