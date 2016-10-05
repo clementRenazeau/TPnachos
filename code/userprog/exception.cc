@@ -108,7 +108,7 @@ ExceptionHandler (ExceptionType which)
 	      do{
 		nbChar = copyStringFromMachine(from, stringBuffer, MAX_STRING_SIZE);
 		synchConsole->SynchPutString(stringBuffer);
-		from+=MAX_STRING_SIZE;
+		from+=nbChar;
 	      }while(nbChar != 0);
 	      break;
 	    }
