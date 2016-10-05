@@ -12,5 +12,7 @@ int main(){
   char tab[6];
   GetString(tab, 6);
   PutString(tab);
+  GetString(tab, 6);
+  PutString(tab);
   return 0;
 }

@@ -25,6 +25,7 @@
 #include "system.h"
 #include "syscall.h"
 #ifdef CHANGED
+#include <algorithm>
 #include "sysutils.h"
 #endif
 //----------------------------------------------------------------------
@@ -123,10 +124,15 @@ ExceptionHandler (ExceptionType which)
 	    {
 	      DEBUG('s', "GetString\n");
 	      int to = machine->ReadRegister(4);
-	      int n = machine->ReadRegister(5);
-	      char* stringBuffer = new char[n];
-	      int size = synchConsole->SynchGetString(stringBuffer, n);
-	      copyStringToMachine(to, stringBuffer, size);
+	      int n = machine->ReadRegister(5) - 1;
+	      char* stringBuffer = new char[MAX_STRING_SIZE+1];
+	      int size;
+	      do{
+		size = synchConsole->SynchGetString(stringBuffer, std::min(MAX_STRING_SIZE, n));
+		n-=size;
+		copyStringToMachine(to, stringBuffer, size);
+		to+=size;
+	      }while(size != 0 && stringBuffer[size-1] != '\n');
 	      delete stringBuffer;
 	      break;
 	    }
