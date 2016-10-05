@@ -4,6 +4,9 @@
 
 # Rapport TP Nachos n°1
 
+
+## Bilan
+
 Dans cette première partie il nous a été demandé de découvrir le fonctionnement de Nachos par une étude préalable, en surface du code, pour ensuite nous lancer dans l’implémentation de la synchronisation des entrées et des sorties. Pour ce faire il a fallu ajouter un certain nombre de fichiers comme demandé dans le fascicule de TD. 
 
 - sysutils
@@ -11,12 +14,13 @@ Dans cette première partie il nous a été demandé de découvrir le fonctionne
 - halt → exit
 - copyStringFromMachine
 
-## Bilan
-
-Le début de l’implémentation étant assez simple, c’est finalement les dernières méthodes qui se sont révélés les plus ardus à implémenter. Notamment les méthodes « SynchGetString » et « SynchPutString »
 ## Points délicats
 
+Le début de l’implémentation étant assez simple, c’est finalement les dernières méthodes qui se sont révélés les plus ardus à implémenter. Notamment les méthodes « SynchGetString » et « SynchPutString ».
+Nous avons buté un moment sur les indices et le positionnement du caractère EOF 
+
 ## Limitations
+
 
 Pas les bonus, pas d’accès concurrent sur le « GetString », les paramètres introduits ne sont pas externalisés. 
 
