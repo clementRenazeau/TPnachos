@@ -39,9 +39,13 @@ Notamment les appels système `SC_GetString` et `SC_PutString`. Ce sont ces appe
 On doit également procéder par morceaux,
 - Nous avons buté un moment sur les indices et le bon positionnement du caractère `NULL` à la fin des chaînes de caractères.
 
+Il est également à noter que l'implémentation de l'appel système `SC_GetInt` a nécessité une attention particulière, car contrairement à `GetChar`,
+la valeur de retour passe ici par un pointeur. Il a donc fallu allouer une variable temporaire de type `int` dans le noyau, remplir ce buffer et au final le recopier dans la mémoire
+du programme utilisateur à l'adresse spécifiée. Cette opération de recopie a entrainée la création d'une méthode utilitaire `copyIntToMachine(int val, int addr)`.
+
 ## Limitations
 
-Pour le moment les méthodes optionnelles de la première partie n'ont pas encore été implémentées par manque de temps.
+Pour le moment la méthode optionnelle `printf` de la première partie n'a pas encore été implémentée par manque de temps.
 
 Nous n'avons pas encore étudié les accès concurrents sur le `GetString`, en conséquence il n'est pas encore envisageable d'utiliser les `threads` utilisateur: 
 en effet des appels concurrents à la routine noyau `SC_GetString` produiraient un résultat indéterminé pour les 2 appelants, chacun ayant une partie de la chaine de caractères.

@@ -136,6 +136,27 @@ ExceptionHandler (ExceptionType which)
 	      delete stringBuffer;
 	      break;
 	    }
+	  case SC_PutInt:
+	    {
+	      DEBUG('s', "PutInt\n");
+	      int toPut = machine->ReadRegister(4);
+	      char stringBuffer[12];
+	      snprintf(stringBuffer, 12, "%d", toPut);
+	      synchConsole->SynchPutString(stringBuffer);
+	      break;
+	    }
+	   case SC_GetInt:
+	    {
+	      DEBUG('s', "GetInt\n");
+	      int addrInt = machine->ReadRegister(4);
+	      char stringBuffer[13];
+	      int buffTmp;
+	      synchConsole->SynchGetString(stringBuffer, 12);
+	      sscanf(stringBuffer, "%d", &buffTmp);
+	      copyIntToMachine(buffTmp, addrInt);
+	      break;
+	    }
+	      
 #endif //CHANGED
 	  default:
 	    {

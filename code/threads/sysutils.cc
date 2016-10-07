@@ -20,4 +20,7 @@ void copyStringToMachine(int to, char* from, unsigned int size){
   }
   machine->WriteMem(to+pos, 1, 0);
 }
+void copyIntToMachine(int valeur, int to){
+  machine->WriteMem(to, 4, valeur);
+}
 #endif
