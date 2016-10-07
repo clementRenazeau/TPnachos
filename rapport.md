@@ -1,8 +1,6 @@
-% Rapport TP1 Nachos: Entrées/Sorties
-% Clément Renazeau & Thomas Loubiou
-% 5 Octobre 2016
+# Rapport TP1 Nachos: Entrées/Sorties
 
-# Rapport TP Nachos n°1
+Clément Renazeau & Thomas Loubiou
 
 
 ## Bilan
@@ -26,18 +24,31 @@ D'autres fichiers ont dus être modifiés pour répondre aux questions du TP:
  * `test/Start.S` qui contient le code assembleur chargé d'effectuer les appels systèmes, mais également de définir la fonction `\_start` qui est le réel point d'entré d'un programme C.
    C'est également ce point d'entré qui retourne la valeur retournée par la fonction `main` du programme vers le noyau.
    Dans l'implémentation originale, cette valeur était perdue, dans notre version elle a été sauvegardée dans le registre 4.
-   De plus la gestion de l'exception SC_Exit correspondante n'avait pas été implémentée. Cela a été corrigé.
+   De plus la gestion de l'exception `SC_Exit` correspondante n'avait pas été implémentée. Cela a été corrigé.
  * `userprog/exception` qui implémente toutes les interruptions possibles, notamment les interruptions logicielles envoyées par les programmes utilisateurs afin de communiquer avec le noyau.
+
+    * Dans le cadre de l'utilisation de `Get_Char` il est a noté que nous retournons la valeur de la macro `EOF`.
 
 ## Points délicats
 
-Le début de l'implémentation étant assez simple, c’est finalement les dernières méthodes qui se sont révélés les plus ardus à implémenter. Notamment les méthodes `SynchGetString` et `SynchPutString`.
-Nous avons buté un moment sur les indices et le bon positionnement du caractère `NULL` à la fin des chaînes de caractères.
+Le début de l'implémentation étant assez simple, c’est finalement les dernières méthodes qui se sont révélés les plus ardus à implémenter. 
+Notamment les appels système `SC_GetString` et `SC_PutString`. Ce sont ces appels qui nous ont demandés le plus de reflexion : 
+
+- pour l'appel `SC_GetString` l'utilisateur doit pouvoir demander à récuperer une très longue chaîne de caractères et nous devons être en mesure de restituer cette chaîne en se servant d'un buffer de taille réduite. La chaîne entrée par l'utilisateur est découpée en plusieurs morceaux qui sont copiés un à un dans l'espace mémoire du programme utilisateur,
+- l'appel système `SC_PutString` nous a posé le même problème, si l'utilisateur passe une chaîne de 1Mo il ne faut pas que le noyau alloue un buffer de la même taille. 
+On doit également procéder par morceaux,
+- Nous avons buté un moment sur les indices et le bon positionnement du caractère `NULL` à la fin des chaînes de caractères.
 
 ## Limitations
 
 Pour le moment les méthodes optionnelles de la première partie n'ont pas encore été implémentées par manque de temps.
-Nous n'avons pas encore étudié les accès concurrents sur le `GetString`, en conséquence il n'est pas encore envisageable d'utiliser les `threads` utilisateur, pour l'instant.
+
+Nous n'avons pas encore étudié les accès concurrents sur le `GetString`, en conséquence il n'est pas encore envisageable d'utiliser les `threads` utilisateur: 
+en effet des appels concurrents à la routine noyau `SC_GetString` produiraient un résultat indéterminé pour les 2 appelants, chacun ayant une partie de la chaine de caractères.
+
+Par exemple, si 2 threads essaient en même temps de récupérer une chaine de caractères depuis l'entrée utilisateur,
+et que l'utilisateur entre `abcd\ne\n`, le thread 1 pourra récupérer `ad\n` alors que le thread 2 récupérera `bce\n`.
+
 Les paramètres introduits (tel que `MAX_STRING_SIZE`) ne sont pas externalisés et il pourrait être intéressant de le faire pour permettre une utilisation plus agréable et flexible du système. 
 
 ## Tests
@@ -47,7 +58,7 @@ Ils consistent principalement à la création de fichiers similaire à `putchar.
 pour pouvoir tester les méthodes dans des conditions normales d'utilisations.
 Par exemple, tester l'écriture via `putString` de chaînes de caractères plus ou moins longue que la définition de la taille maximum des chaines de caractère (`MAX_STRING_SIZE`).
 
-Le test suivant permet de mettre en évidence le fait que notre implémentation s'arrête bien quand `GetString` rencontre le caractère de fin de chaîne.
+Le test suivant permet de mettre en évidence le fait que notre implémentation s'arrête bien quand `GetString` rencontre la fin du fichier.
 
 ```bash
 $ echo  "c" | ./userprog/nachos -d s -x ./test/getstring
