@@ -27,6 +27,7 @@
 #ifdef CHANGED
 #include <algorithm>
 #include "sysutils.h"
+#include "userthread.h"
 #endif
 //----------------------------------------------------------------------
 // UpdatePC : Increments the Program Counter register in order to resume
@@ -156,7 +157,16 @@ ExceptionHandler (ExceptionType which)
 	      copyIntToMachine(buffTmp, addrInt);
 	      break;
 	    }
-	      
+	   case SC_ThreadCreate:
+	    {
+	      DEBUG('s', "ThreadCreate\n");
+	      break;
+	    }
+	   case SC_ThreadExit:
+	    {
+	      DEBUG('s', "ThreadExit\n");
+	      break;
+	    }	    
 #endif //CHANGED
 	  default:
 	    {
