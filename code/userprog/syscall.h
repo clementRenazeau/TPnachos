@@ -143,6 +143,8 @@ void Yield ();
 
 #ifdef CHANGED
 void PutChar(char c);
+int ThreadCreate(void f(void *arg), void *arg);
+void TheadExit(void);
 #endif //CHANGED
 
 #endif // IN_USER_MODE
