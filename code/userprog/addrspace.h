@@ -34,7 +34,7 @@ class AddrSpace:dontcopythis
     void RestoreState ();	// info on a context switch 
 
 #ifdef CHANGED
-    unsigned int getStackSize() const;
+    unsigned int allocateUserStack();
 #endif // CHANGED
 
   private:

@@ -160,15 +160,16 @@ ExceptionHandler (ExceptionType which)
 	   case SC_ThreadCreate:
 	    {
 	      DEBUG('s', "ThreadCreate\n");
-          int f = machine->ReadRegister(4);
-          int arg = machine->ReadRegister(5);
-          int ret = do_createThread(f, arg);
-          machine->WriteRegister(2, ret);
+	      int f = machine->ReadRegister(4);
+	      int arg = machine->ReadRegister(5);
+	      int ret = do_createThread(f, arg);
+	      machine->WriteRegister(2, ret);
 	      break;
 	    }
 	   case SC_ThreadExit:
 	    {
 	      DEBUG('s', "ThreadExit\n");
+	      do_ThreadExit();
 	      break;
 	    }	    
 #endif //CHANGED

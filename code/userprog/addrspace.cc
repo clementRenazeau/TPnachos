@@ -198,7 +198,8 @@ AddrSpace::RestoreState ()
     machine->pageTableSize = numPages;
 }
 #ifdef CHANGED
-unsigned int AddrSpace::getStackSize() const {
+unsigned int AddrSpace::allocateUserStack(){
     return numPages * PageSize;
 }
+
 #endif // CHANGED

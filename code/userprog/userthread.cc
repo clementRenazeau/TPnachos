@@ -18,20 +18,21 @@ int do_createThread(int f, int arg) {
 
 void StartUserThread(void *schmurtz) {
     ThreadParameters *p = static_cast<ThreadParameters*>(schmurtz);
-
+    int userStack = currentThread->space->allocateUserStack() - 256 - 16;
     for (int i = 0; i < NumTotalRegs; i++) {
         machine->WriteRegister (i, 0);
     }
 
     machine->WriteRegister (PCReg, p->function);
-
     machine->WriteRegister (NextPCReg, machine->ReadRegister(PCReg) + 4);
-
-    machine->WriteRegister (StackReg, currentThread->space->getStackSize() - 16 - 256);
-    DEBUG ('a', "Initializing stack register to 0x%x\n",
-            currentThread->space->getStackSize() - 16 - 256);
+    machine->WriteRegister (4, p->argument);
+    delete p;
+    machine->WriteRegister (StackReg, userStack);
+    DEBUG ('a', "Initializing stack register to 0x%x\n",userStack);
+    machine->Run();
 }
-int AllocateUserStack() {
-
+void do_ThreadExit(){
+  currentThread->Finish();
+  
 }
 #endif
