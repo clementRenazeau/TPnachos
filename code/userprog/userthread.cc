@@ -18,7 +18,7 @@ int do_createThread(int f, int arg) {
 
 void StartUserThread(void *schmurtz) {
     ThreadParameters *p = static_cast<ThreadParameters*>(schmurtz);
-    int userStack = currentThread->space->allocateUserStack() - 256 - 16;
+    int userStack = currentThread->space->AllocateUserStack() - 256 - 16;
     for (int i = 0; i < NumTotalRegs; i++) {
         machine->WriteRegister (i, 0);
     }

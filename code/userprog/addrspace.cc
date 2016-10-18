@@ -122,6 +122,10 @@ AddrSpace::AddrSpace (OpenFile * executable)
 	   size - UserStacksAreaSize, UserStacksAreaSize);
 
     pageTable[0].valid = FALSE;			// Catch NULL dereference
+#ifdef CHANGED
+    numThreads = 0;
+    mutexThreads = new Semaphore("mutexThreads", 1);
+#endif //CHANGED
 }
 
 //----------------------------------------------------------------------
@@ -198,8 +202,20 @@ AddrSpace::RestoreState ()
     machine->pageTableSize = numPages;
 }
 #ifdef CHANGED
-unsigned int AddrSpace::allocateUserStack(){
-    return numPages * PageSize;
+unsigned int AddrSpace::AllocateUserStack(){
+return numPages * PageSize;
 }
 
+void AddrSpace::IncThreads(){
+mutexThreads->P();
+++numThreads;
+mutexThreads->V();
+}
+
+unsigned int AddrSpace::DecThreads(){
+mutexThreads->P();
+unsigned int tmp=--numThreads;
+mutexThreads->V();
+return tmp;
+}
 #endif // CHANGED

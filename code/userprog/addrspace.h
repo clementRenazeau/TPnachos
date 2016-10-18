@@ -19,6 +19,9 @@
 
 #define UserStacksAreaSize		1024	// increase this as necessary!
 
+#ifdef CHANGED
+class Semaphore;
+#endif //CHANGED
 class AddrSpace:dontcopythis
 {
   public:
@@ -34,14 +37,20 @@ class AddrSpace:dontcopythis
     void RestoreState ();	// info on a context switch 
 
 #ifdef CHANGED
-    unsigned int allocateUserStack();
+    unsigned int AllocateUserStack();
+    void IncThreads();
+    unsigned int DecThreads();
 #endif // CHANGED
 
   private:
       TranslationEntry * pageTable;	// Assume linear page table translation
     // for now!
-    unsigned int numPages;	// Number of pages in the virtual 
+    unsigned int numPages;	// Number of pages in the virtual
     // address space
+#ifdef CHANGED
+    unsigned int numThreads;
+    Semaphore *mutexThreads;
+#endif //CHANGED
 };
 
 #endif // ADDRSPACE_H
