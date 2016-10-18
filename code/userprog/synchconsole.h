@@ -4,6 +4,7 @@
 #include "copyright.h"
 #include "utility.h"
 #include "console.h"
+#include "synch.h"
 class SynchConsole:dontcopythis {
     public:
         SynchConsole(const char *readFile, const char *writeFile);// initialize the hardware console device
@@ -14,6 +15,7 @@ class SynchConsole:dontcopythis {
         int SynchGetString(char *s, int n);       // Unix fgets(3S)
     private:
         Console *console;
+	Semaphore *putchar, *getchar;
 };
 #endif // SYNCHCONSOLE_H
 #endif // CHANGED

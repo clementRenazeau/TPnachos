@@ -31,8 +31,8 @@ void StartUserThread(void *schmurtz) {
     DEBUG ('a', "Initializing stack register to 0x%x\n",userStack);
     machine->Run();
 }
+
 void do_ThreadExit(){
-  currentThread->Finish();
-  
+  currentThread->Finish(); 
 }
 #endif

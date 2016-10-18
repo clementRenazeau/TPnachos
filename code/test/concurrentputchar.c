@@ -10,6 +10,7 @@ void f(int n){
 
 int main(){
   ThreadCreate(f, 3);
+  PutChar('z');
   while(1);
   return 0;
 }
