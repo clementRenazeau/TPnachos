@@ -125,6 +125,7 @@ AddrSpace::AddrSpace (OpenFile * executable)
 #ifdef CHANGED
     numThreads = 0;
     mutexThreads = new Semaphore("mutexThreads", 1);
+    semaphoreMain = new Semaphore("semaphoreMain", 0);
 #endif //CHANGED
 }
 
@@ -203,19 +204,31 @@ AddrSpace::RestoreState ()
 }
 #ifdef CHANGED
 unsigned int AddrSpace::AllocateUserStack(){
-return numPages * PageSize;
+  return numPages * PageSize;
 }
 
 void AddrSpace::IncThreads(){
-mutexThreads->P();
-++numThreads;
-mutexThreads->V();
+  mutexThreads->P();
+  ++numThreads;
+  mutexThreads->V();
 }
 
-unsigned int AddrSpace::DecThreads(){
-mutexThreads->P();
-unsigned int tmp=--numThreads;
-mutexThreads->V();
-return tmp;
+unsigned int AddrSpace::GetNbThreads(){
+  mutexThreads->P();
+  unsigned int tmpNb = numThreads;
+  mutexThreads->V();
+  return tmpNb;
+}
+
+void AddrSpace::DecThreads(){
+  mutexThreads->P();
+  if(--numThreads == 0){//si on est le dernier thread
+    semaphoreMain->V();
+  }
+  mutexThreads->V();
+}
+
+void AddrSpace::WaitLastThread(){
+  semaphoreMain->P();
 }
 #endif // CHANGED

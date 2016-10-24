@@ -12,6 +12,7 @@ struct ThreadParameters {
 int do_createThread(int f, int arg) {
     Thread *newThread = new Thread("userThread");
     ThreadParameters *p = new ThreadParameters {f, arg};
+    newThread->space->IncThreads();
     newThread->Start(StartUserThread, p);
     return 0;
 }
@@ -33,6 +34,7 @@ void StartUserThread(void *schmurtz) {
 }
 
 void do_ThreadExit(){
-  currentThread->Finish(); 
+  currentThread->space->DecThreads();
+  currentThread->Finish();
 }
 #endif

@@ -90,7 +90,10 @@ ExceptionHandler (ExceptionType which)
 	    {
 	      DEBUG ('s', "Shutdown, initiated by user program.\n");
 	      int returnValue = machine->ReadRegister(4);
-          printf("\nExited with code %d\n", returnValue);
+	      if(currentThread->space->GetNbThreads() > 0){
+		currentThread->space->WaitLastThread();
+	      }
+	      printf("\nExited with code %d\n", returnValue);
 	      interrupt->Halt ();
 	      break;
 	    }

@@ -16,6 +16,7 @@
 #include "copyright.h"
 #include "filesys.h"
 #include "translate.h"
+#include "bitmap.h"
 
 #define UserStacksAreaSize		1024	// increase this as necessary!
 
@@ -39,7 +40,9 @@ class AddrSpace:dontcopythis
 #ifdef CHANGED
     unsigned int AllocateUserStack();
     void IncThreads();
-    unsigned int DecThreads();
+    void DecThreads();
+    unsigned int GetNbThreads();
+    void WaitLastThread();
 #endif // CHANGED
 
   private:
@@ -50,6 +53,7 @@ class AddrSpace:dontcopythis
 #ifdef CHANGED
     unsigned int numThreads;
     Semaphore *mutexThreads;
+    Semaphore *semaphoreMain;
 #endif //CHANGED
 };
 

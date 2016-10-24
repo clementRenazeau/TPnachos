@@ -10,6 +10,5 @@ void f(int n){
 
 int main(){
   ThreadCreate(f, 3);
-  while(1);
   return 0;
 }
