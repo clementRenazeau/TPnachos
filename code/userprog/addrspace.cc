@@ -126,6 +126,7 @@ AddrSpace::AddrSpace (OpenFile * executable)
     numThreads = 0;
     mutexThreads = new Semaphore("mutexThreads", 1);
     semaphoreMain = new Semaphore("semaphoreMain", 0);
+    userStacks = new BitMap((UserStacksAreaSize - 256 - 16)/256); 
 #endif //CHANGED
 }
 
@@ -203,8 +204,21 @@ AddrSpace::RestoreState ()
     machine->pageTableSize = numPages;
 }
 #ifdef CHANGED
-unsigned int AddrSpace::AllocateUserStack(){
-  return numPages * PageSize;
+int AddrSpace::AllocateUserStack(){
+  mutexThreads->P();
+  int stackID = userStacks->Find();
+  mutexThreads->V();
+  if(stackID != -1){
+    return (numPages * PageSize - 16 - 256 - stackID*256);
+  }
+  return -1;
+}
+
+void AddrSpace::DeAllocateUserStack(int stack){
+  int stackID = (numPages * PageSize - 16 - 256 - stack)/256;
+  mutexThreads->P();
+  userStacks->Clear(stackID);
+  mutexThreads->V();
 }
 
 void AddrSpace::IncThreads(){

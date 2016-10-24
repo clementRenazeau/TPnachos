@@ -38,7 +38,8 @@ class AddrSpace:dontcopythis
     void RestoreState ();	// info on a context switch 
 
 #ifdef CHANGED
-    unsigned int AllocateUserStack();
+    int AllocateUserStack();
+    void DeAllocateUserStack(int stack);
     void IncThreads();
     void DecThreads();
     unsigned int GetNbThreads();
@@ -54,6 +55,7 @@ class AddrSpace:dontcopythis
     unsigned int numThreads;
     Semaphore *mutexThreads;
     Semaphore *semaphoreMain;
+    BitMap *userStacks;
 #endif //CHANGED
 };
 

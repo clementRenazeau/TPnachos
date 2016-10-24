@@ -5,35 +5,41 @@
 #ifdef USER_PROGRAM
 static void StartUserThread(void *schmurtz);
 struct ThreadParameters {
-    int function;
-    int argument;
+  int function;
+  int argument;
+  int stack;
 };
 
 int do_createThread(int f, int arg) {
+  int stack = currentThread->space->AllocateUserStack();
+  if(stack != -1){
     Thread *newThread = new Thread("userThread");
-    ThreadParameters *p = new ThreadParameters {f, arg};
+    ThreadParameters *p = new ThreadParameters {f, arg, stack};
     newThread->space->IncThreads();
+    newThread->userStackTop = stack;
     newThread->Start(StartUserThread, p);
     return 0;
+  }
+  return -1;
 }
 
 void StartUserThread(void *schmurtz) {
-    ThreadParameters *p = static_cast<ThreadParameters*>(schmurtz);
-    int userStack = currentThread->space->AllocateUserStack() - 256 - 16;
-    for (int i = 0; i < NumTotalRegs; i++) {
-        machine->WriteRegister (i, 0);
-    }
+  ThreadParameters *p = static_cast<ThreadParameters*>(schmurtz);
+  for (int i = 0; i < NumTotalRegs; i++) {
+    machine->WriteRegister (i, 0);
+  }
 
-    machine->WriteRegister (PCReg, p->function);
-    machine->WriteRegister (NextPCReg, machine->ReadRegister(PCReg) + 4);
-    machine->WriteRegister (4, p->argument);
-    delete p;
-    machine->WriteRegister (StackReg, userStack);
-    DEBUG ('a', "Initializing stack register to 0x%x\n",userStack);
-    machine->Run();
+  machine->WriteRegister (PCReg, p->function);
+  machine->WriteRegister (NextPCReg, machine->ReadRegister(PCReg) + 4);
+  machine->WriteRegister (4, p->argument);
+  machine->WriteRegister (StackReg, p->stack);
+  DEBUG ('a', "Initializing stack register to 0x%x\n",p->stack);
+  delete p;
+  machine->Run();
 }
 
 void do_ThreadExit(){
+  currentThread->space->DeAllocateUserStack(currentThread->userStackTop);
   currentThread->space->DecThreads();
   currentThread->Finish();
 }
