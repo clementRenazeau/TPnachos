@@ -26,8 +26,12 @@ Cela est réalisé avec l'aide d'une sémaphore: le dernier thread qui quitte me
 Si, quand le main quitte, il reste des threads en cours d'exécution, alors il fait un P sur cette sémaphore.
 Nous avons pris soin à l'implémentation, afin que les appels concurrents ne posent pas de soucis.
 Par exemple si un thread quitte entre le moment ou le thread principal vérifie s'il reste des threads et le moment où il attend les autres threads, cela ne pose pas de problème.
-2.  L'allocation de la pile
-3.  Le ThreadExit automatique.
+Les fonctions nécessaire à ce mécanisme ont été écrites dans les fichiers `addrspace.*`.
+2.  L'allocation/désallocation de la pile grâce à un bitmap.
+Cela a été en grande partie écrit dans les fichiers `addrspace.*`.
+Dans le détail, les fonctions introduites retournent une adresse, il a donc été nécessaire de trouver une formule pour convertir ces adresses en indice de `BitMap` et vice-versa.
+3.  Le `ThreadExit` automatique, qui passe l'adresse de l'appel système `ThreadExit` à la fonction `ThreadCreate` grâce à une macro dans le fichier `syscall.h`.
+Cette adresse est ensuite mise dans le registre 31 lors de l'initialisation de la pile du thread, afin qu'elle soit appelée automatiquement à la fin de la fonction.
 
 Limitations
 -----------
