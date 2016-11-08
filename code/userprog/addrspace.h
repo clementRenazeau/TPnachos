@@ -18,7 +18,7 @@
 #include "translate.h"
 #include "bitmap.h"
 
-#define UserStacksAreaSize		1024	// increase this as necessary!
+#define UserStacksAreaSize		2048	// increase this as necessary!
 
 #ifdef CHANGED
 class Semaphore;

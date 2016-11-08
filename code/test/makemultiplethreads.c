@@ -6,7 +6,7 @@ void f(int n){
   }
   PutInt(i);
   PutChar('\n');
-  ThreadExit();
+  //ThreadExit();
 }
 
 int main(){

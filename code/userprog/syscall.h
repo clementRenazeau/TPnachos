@@ -143,6 +143,7 @@ void Yield ();
 
 #ifdef CHANGED
 void PutChar(char c);
+#define ThreadCreate(F, A) TheadCreate(F, A, TheadExit)
 int ThreadCreate(void f(void *arg), void *arg);
 void TheadExit(void);
 #endif //CHANGED

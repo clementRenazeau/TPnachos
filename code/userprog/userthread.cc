@@ -8,13 +8,14 @@ struct ThreadParameters {
   int function;
   int argument;
   int stack;
+  int exitAddress;
 };
 
-int do_createThread(int f, int arg) {
+int do_createThread(int f, int arg, int exitAddress) {
   int stack = currentThread->space->AllocateUserStack();
   if(stack != -1){
     Thread *newThread = new Thread("userThread");
-    ThreadParameters *p = new ThreadParameters {f, arg, stack};
+    ThreadParameters *p = new ThreadParameters {f, arg, stack, exitAddress};
     newThread->space->IncThreads();
     newThread->userStackTop = stack;
     newThread->Start(StartUserThread, p);
@@ -33,6 +34,7 @@ void StartUserThread(void *schmurtz) {
   machine->WriteRegister (NextPCReg, machine->ReadRegister(PCReg) + 4);
   machine->WriteRegister (4, p->argument);
   machine->WriteRegister (StackReg, p->stack);
+  machine->WriteRegister (31, p->exitAddress);
   DEBUG ('a', "Initializing stack register to 0x%x\n",p->stack);
   delete p;
   machine->Run();

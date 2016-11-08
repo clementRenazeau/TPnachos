@@ -165,7 +165,8 @@ ExceptionHandler (ExceptionType which)
 	      DEBUG('s', "ThreadCreate\n");
 	      int f = machine->ReadRegister(4);
 	      int arg = machine->ReadRegister(5);
-	      int ret = do_createThread(f, arg);
+	      int exitAddress = machine->ReadRegister(6);
+	      int ret = do_createThread(f, arg, exitAddress);
 	      machine->WriteRegister(2, ret);
 	      break;
 	    }
