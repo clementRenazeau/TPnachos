@@ -198,7 +198,7 @@ GetInt:
 	j	$31
 	.end GetInt
 
-    .globl ThreadCreate
+        .globl ThreadCreate
 	.ent	ThreadCreate
 ThreadCreate:
 	addiu $2,$0,SC_ThreadCreate

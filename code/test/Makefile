@@ -28,8 +28,7 @@ endif
 ifeq ($(NACHOS_SYS),LINUX_SYS)
 # Linux: fill in with the full path to the binutils and gcc.
 # For instance:
-# GCCDIR	= /net/cremi/aguermou/xgcc/decstation-ultrix/bin
-GCCDIR	= /opt/xgcc/decstation-ultrix/bin
+GCCDIR	= /net/cremi/aguermou/xgcc/decstation-ultrix/bin
 endif
 
 ifeq ($(NACHOS_SYS),MAC_OS_SYS)
@@ -49,12 +48,12 @@ CPPFLAGS = $(INCDIR) -DCHANGED
 # CPPFLAGS = -P $(INCDIR)
 
 
-CC	:=	$(GCCDIR)/xgcc
+CC	:=	$(GCCDIR)/gcc
 AS	:=	$(GCCDIR)/as
 LD	:=	$(GCCDIR)/ld
 OBJDUMP	:=	$(GCCDIR)/objdump
 
-CPP	:=	$(GCCDIR)/xgcc -E -P
+CPP	:=	$(GCCDIR)/gcc -E -P
 INCDIR	:=	-I../userprog -I../threads
 CFLAGS 	:=	-DIN_USER_MODE -c $(INCDIR) -G 0 -Wall -O2 -DCHANGED
 
