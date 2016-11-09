@@ -6,7 +6,7 @@ Clément Renazeau & Thomas Loubiou
 Bilan
 -----
 
-Dans cette deuxième partie de l'implémentation nachos, il nous est demandé d’ajouter la possibilité d’avoir plusieurs `threads` au niveau des programmes utilisateurs. Pour se faire :
+Dans cette deuxième partie de l'implémentation nachos, il nous est demandé d’ajouter la possibilité d’avoir plusieurs `threads` au niveau des programmes utilisateurs. Pour se faire:
 
 -   Nous avons créé de nouveaux appels système nécessaire à l'utilisation d'un `thread`,
 -   Nous nous sommes ensuite portés vers la gestion de plusieurs `threads` en même temps:
@@ -63,3 +63,12 @@ En effet l'espace réservé pour les piles d'exécution est défini dans `userpr
 
 Tests
 -----
+
+Afin de tester les nouvelles fonctionnalités introduites nous avons écrits 3 tests:
+
+1. `makethreads` qui créé 1 seul thread qui écrit dans la console puis quitte. Cela teste le bon fonctionnement de la création et destruction d'un seul thread.
+2. `concurrentputchar` qui créé un thread, et essaie d'afficher des caractères depuis ce dernier ainsi que depuis le main, en même temps.
+Grâce à la mise en section critique de l'appel putchar, ce test fonctionne. Sans cette protection on peut observer un plantage. **(A VÉRIFIER)**
+3. `makemultiplethreads` qui teste la création de plusieurs threads et vérifie que leurs piles soient bien différente (avec l'aide d'une variable allouée sur la pile avec un accès `volatile`).
+C'est également dans ce test que nous avons vérifiés la bonne terminaison automatique des threads.
+
