@@ -28,7 +28,23 @@
 //      object file header, in case the file was generated on a little
 //      endian machine, and we're now running on a big endian machine.
 //----------------------------------------------------------------------
+#ifdef CHANGED
+static void ReadAtVirtual(OpenFile *executable, int virtualaddr, int numBytes, int position, TranslationEntry *pageTable, unsigned numPages){
+  char *tmpBuff = new char[numBytes];
+  executable->ReadAt(tmpBuff, numBytes, position);
+  TranslationEntry *pageTableTmp = machine->pageTable;
+  unsigned int pageTableSizeTmp = machine->pageTableSize;
+  machine->pageTable = pageTable;
+  machine->pageTableSize = numPages;
+  for(int i=0; i < numBytes; ++i){
+    machine->WriteMem(virtualaddr + i, 1, tmpBuff[i]);
+  }
+  machine->pageTable = pageTableTmp;
+  machine->pageTableSize = pageTableSizeTmp;
+}
+  
 
+#endif ///CHANGED
 static void
 SwapHeader (NoffHeader * noffH)
 {
@@ -91,7 +107,7 @@ AddrSpace::AddrSpace (OpenFile * executable)
     pageTable = new TranslationEntry[numPages];
     for (i = 0; i < numPages; i++)
       {
-	  pageTable[i].physicalPage = i;	// for now, phys page # = virtual page #
+	  pageTable[i].physicalPage = i + 1;	// for now, phys page # = virtual page #
 	  pageTable[i].valid = TRUE;
 	  pageTable[i].use = FALSE;
 	  pageTable[i].dirty = FALSE;
@@ -101,23 +117,20 @@ AddrSpace::AddrSpace (OpenFile * executable)
       }
 
 // then, copy in the code and data segments into memory
+#ifdef CHANGED
     if (noffH.code.size > 0)
       {
 	  DEBUG ('a', "Initializing code segment, at 0x%x, size 0x%x\n",
 		 noffH.code.virtualAddr, noffH.code.size);
-	  executable->ReadAt (&(machine->mainMemory[noffH.code.virtualAddr]),
-			      noffH.code.size, noffH.code.inFileAddr);
+	  ReadAtVirtual (executable, noffH.code.virtualAddr, noffH.code.size, noffH.code.inFileAddr, pageTable, numPages);
       }
     if (noffH.initData.size > 0)
       {
 	  DEBUG ('a', "Initializing data segment, at 0x%x, size 0x%x\n",
 		 noffH.initData.virtualAddr, noffH.initData.size);
-	  executable->ReadAt (&
-			      (machine->mainMemory
-			       [noffH.initData.virtualAddr]),
-			      noffH.initData.size, noffH.initData.inFileAddr);
+	  ReadAtVirtual (executable, noffH.initData.virtualAddr, noffH.initData.size, noffH.initData.inFileAddr, pageTable, numPages);
       }
-
+#endif //CHANGED
     DEBUG ('a', "Area for stacks at 0x%x, size 0x%x\n",
 	   size - UserStacksAreaSize, UserStacksAreaSize);
 
@@ -203,6 +216,7 @@ AddrSpace::RestoreState ()
     machine->pageTable = pageTable;
     machine->pageTableSize = numPages;
 }
+ 
 #ifdef CHANGED
 int AddrSpace::AllocateUserStack(){
   mutexThreads->P();

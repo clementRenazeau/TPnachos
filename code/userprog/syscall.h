@@ -143,9 +143,11 @@ void Yield ();
 
 #ifdef CHANGED
 void PutChar(char c);
-#define ThreadCreate(F, A) TheadCreate(F, A, TheadExit)
-int ThreadCreate(void f(void *arg), void *arg);
-void TheadExit(void);
+
+int ThreadCreate(void f(void *arg), void *arg, void exitFunc(void));
+#define ThreadCreate(F, A) ThreadCreate(F, A, ThreadExit)
+
+void ThreadExit(void);
 #endif //CHANGED
 
 #endif // IN_USER_MODE
