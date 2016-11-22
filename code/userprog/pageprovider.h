@@ -2,7 +2,7 @@
 #define PAGEPROVIDER_H
 
 #include "bitmap.h"
-
+#include "synch.h"
 class PageProvider{
  public:
   PageProvider(int nbPages);
@@ -13,6 +13,7 @@ class PageProvider{
   
  private:
   BitMap *pages;
+  Semaphore *s;
 };
 
 #endif //PAGEPROVIDER_H

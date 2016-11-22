@@ -37,6 +37,7 @@ Machine *machine;		// user program memory and registers
 
 #ifdef CHANGED
 #ifdef USER_PROGRAM
+PageProvider *pageProvider;
 SynchConsole *synchConsole;
 #endif
 #endif
@@ -185,6 +186,7 @@ Initialize (int argc, char **argv)
 #ifdef USER_PROGRAM
     machine = new Machine (debugUserProg);	// this must come first
 #ifdef CHANGED
+    pageProvider = new PageProvider(NumPhysPages);
     synchConsole = new SynchConsole (NULL, NULL);
 #endif //CHANGED
 #endif

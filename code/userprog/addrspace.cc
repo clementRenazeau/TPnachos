@@ -79,7 +79,8 @@ SwapHeader (NoffHeader * noffH)
 AddrSpace::AddrSpace (OpenFile * executable)
 {
     NoffHeader noffH;
-    unsigned int i, size;
+    int i;
+    unsigned int size;
 
     executable->ReadAt (&noffH, sizeof (noffH), 0);
     if ((noffH.noffMagic != NOFFMAGIC) &&
@@ -99,25 +100,27 @@ AddrSpace::AddrSpace (OpenFile * executable)
     // at least until we have
     // virtual memory
     if (numPages > NumPhysPages)
-	    throw std::bad_alloc();
+      throw std::bad_alloc();
+    ASSERT(numPages <= pageProvider->NumAvailPage());//on vérifie qu'on ait assez de pages
 
     DEBUG ('a', "Initializing address space, num pages %d, total size 0x%x\n",
 	   numPages, size);
 // first, set up the translation 
     pageTable = new TranslationEntry[numPages];
-    for (i = 0; i < numPages; i++)
+#ifdef CHANGED
+    for (i = numPages-1; i >= 0; i--)
       {
-	  pageTable[i].physicalPage = i + 1;	// for now, phys page # = virtual page #
-	  pageTable[i].valid = TRUE;
-	  pageTable[i].use = FALSE;
-	  pageTable[i].dirty = FALSE;
-	  pageTable[i].readOnly = FALSE;	// if the code segment was entirely on 
-	  // a separate page, we could set its 
-	  // pages to be read-only
+	int page = pageTable[i].physicalPage = pageProvider->GetEmptyPage();
+	ASSERT(page != -1);
+	pageTable[i].valid = TRUE;
+	pageTable[i].use = FALSE;
+	pageTable[i].dirty = FALSE;
+	pageTable[i].readOnly = FALSE;	// if the code segment was entirely on 
+	// a separate page, we could set its 
+	// pages to be read-only
       }
 
 // then, copy in the code and data segments into memory
-#ifdef CHANGED
     if (noffH.code.size > 0)
       {
 	  DEBUG ('a', "Initializing code segment, at 0x%x, size 0x%x\n",
@@ -152,7 +155,11 @@ AddrSpace::~AddrSpace ()
 {
   // LB: Missing [] for delete
   // delete pageTable;
+  for (int i = numPages-1; i >= 0; i--){
+    pageProvider->ReleasePage(pageTable[i].physicalPage);
+  }
   delete [] pageTable;
+  
   // End of modification
 }
 

@@ -5,7 +5,7 @@
 
 class PageProvider{
  public:
-  PageProvider();
+  PageProvider(int nbPages);
   ~PageProvider();
   int GetEmptyPage();
   void ReleasePage(int pageNum);
