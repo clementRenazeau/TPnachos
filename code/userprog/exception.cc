@@ -175,7 +175,17 @@ ExceptionHandler (ExceptionType which)
 	      DEBUG('s', "ThreadExit\n");
 	      do_ThreadExit();
 	      break;
-	    }	    
+	    }
+	  case SC_ForkExec:
+	    {
+	      DEBUG('s', "ForkExec\n");
+	      int from = machine->ReadRegister(4);
+	      char stringBuffer[256];
+	      copyStringFromMachine(from, stringBuffer, 256);
+	      int ret = do_ForkExec(stringBuffer);
+	      machine->WriteRegister(2, ret);
+	      break;
+	    }
 #endif //CHANGED
 	  default:
 	    {

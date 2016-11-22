@@ -45,4 +45,26 @@ void do_ThreadExit(){
   currentThread->space->DecThreads();
   currentThread->Finish();
 }
+
+void StartForkExec(void *schmurtz){
+  currentThread->space->InitRegisters ();
+  currentThread->space->RestoreState ();
+  machine->Run();
+}
+
+int do_ForkExec(const char* s){
+  OpenFile *executable = fileSystem->Open (s);
+  AddrSpace *space;
+
+  if (executable == NULL){
+      printf ("Unable to open file %s\n", s);
+      return -1;
+    }
+  space = new AddrSpace (executable);
+  Thread *threadNoyau = new Thread("ForkMain");
+  threadNoyau->space = space;
+  delete executable;
+  threadNoyau->Start(StartForkExec, NULL);
+  return 0;
+}
 #endif
