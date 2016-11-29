@@ -44,7 +44,7 @@ static void ReadAtVirtual(OpenFile *executable, int virtualaddr, int numBytes, i
 }
 
 unsigned int AddrSpace::nbAddrSpaces = 0;
-
+Semaphore mutexNbAddrSpace("mutexNbAddrSpace", 1);
 #endif ///CHANGED
 static void
 SwapHeader (NoffHeader * noffH)
@@ -76,7 +76,6 @@ SwapHeader (NoffHeader * noffH)
 //
 //      "executable" is the file containing the object code to load into memory
 //----------------------------------------------------------------------
-
 AddrSpace::AddrSpace (OpenFile * executable)
 {
     NoffHeader noffH;
@@ -144,7 +143,9 @@ AddrSpace::AddrSpace (OpenFile * executable)
     mutexThreads = new Semaphore("mutexThreads", 1);
     semaphoreMain = new Semaphore("semaphoreMain", 0);
     userStacks = new BitMap((UserStacksAreaSize - 256 - 16)/256);
+    mutexNbAddrSpace.P();
     AddrSpace::nbAddrSpaces++;
+    mutexNbAddrSpace.V();
 #endif //CHANGED
 }
 
@@ -164,8 +165,9 @@ AddrSpace::~AddrSpace ()
   delete mutexThreads;
   delete semaphoreMain;
   delete [] pageTable;
+  mutexNbAddrSpace.P();
   AddrSpace::nbAddrSpaces--;
-  
+  mutexNbAddrSpace.V();
   // End of modification
 }
 

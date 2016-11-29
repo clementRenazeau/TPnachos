@@ -18,7 +18,7 @@ La dernière partie du projet Nachos consiste en la mise en place d'un système 
 Points délicats
 ---------------
 
-L'implémentation de l'appel système ForkExec nous a demandé un peu plus de réflexion que le reste: 
+L'implémentation de l'appel système `ForkExec` nous a demandé un peu plus de réflexion que le reste: 
 
 -   Après avoir créé l'espace d'adressage du processus à créer (`do_ForkExec` dans le fichier `userthread.cc`), il est nécessaire de démarrer son thread principal grâce à la fonction `StartForkExec`.
 -   La fonction `StartForkExec` est chargée d'initialiser les registres du processus (notamment les registres PCReg et NextPCReg), et de lancer le processus.
