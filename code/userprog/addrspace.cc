@@ -42,7 +42,8 @@ static void ReadAtVirtual(OpenFile *executable, int virtualaddr, int numBytes, i
   machine->pageTable = pageTableTmp;
   machine->pageTableSize = pageTableSizeTmp;
 }
-  
+
+unsigned int AddrSpace::nbAddrSpaces = 0;
 
 #endif ///CHANGED
 static void
@@ -142,7 +143,8 @@ AddrSpace::AddrSpace (OpenFile * executable)
     numThreads = 0;
     mutexThreads = new Semaphore("mutexThreads", 1);
     semaphoreMain = new Semaphore("semaphoreMain", 0);
-    userStacks = new BitMap((UserStacksAreaSize - 256 - 16)/256); 
+    userStacks = new BitMap((UserStacksAreaSize - 256 - 16)/256);
+    AddrSpace::nbAddrSpaces++;
 #endif //CHANGED
 }
 
@@ -159,6 +161,7 @@ AddrSpace::~AddrSpace ()
     pageProvider->ReleasePage(pageTable[i].physicalPage);
   }
   delete [] pageTable;
+  AddrSpace::nbAddrSpaces--;
   
   // End of modification
 }
@@ -265,5 +268,8 @@ void AddrSpace::DecThreads(){
 
 void AddrSpace::WaitLastThread(){
   semaphoreMain->P();
+}
+unsigned int AddrSpace::GetNbAddrSpaces() {
+  return AddrSpace::nbAddrSpaces;
 }
 #endif // CHANGED

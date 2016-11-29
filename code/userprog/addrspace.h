@@ -44,12 +44,14 @@ class AddrSpace:dontcopythis
     void DecThreads();
     unsigned int GetNbThreads();
     void WaitLastThread();
+    static unsigned int GetNbAddrSpaces();
 #endif // CHANGED
 
   private:
       TranslationEntry * pageTable;	// Assume linear page table translation
     // for now!
     unsigned int numPages;	// Number of pages in the virtual
+    static unsigned int nbAddrSpaces;
     // address space
 #ifdef CHANGED
     unsigned int numThreads;

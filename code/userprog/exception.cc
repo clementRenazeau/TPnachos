@@ -90,11 +90,16 @@ ExceptionHandler (ExceptionType which)
 	    {
 	      DEBUG ('s', "Shutdown, initiated by user program.\n");
 	      int returnValue = machine->ReadRegister(4);
-	      if(currentThread->space->GetNbThreads() > 0){
+	      if(currentThread->space->GetNbThreads() > 0) {
 		currentThread->space->WaitLastThread();
 	      }
 	      printf("\nExited with code %d\n", returnValue);
-	      interrupt->Halt ();
+	      delete currentThread->space;
+	      if(AddrSpace::GetNbAddrSpaces() == 0) {
+		interrupt->Halt();
+	      } else {
+		currentThread->Finish();
+	      }
 	      break;
 	    }
 	  case SC_PutChar:
