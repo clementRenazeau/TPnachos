@@ -160,6 +160,9 @@ AddrSpace::~AddrSpace ()
   for (int i = numPages-1; i >= 0; i--){
     pageProvider->ReleasePage(pageTable[i].physicalPage);
   }
+  delete userStacks;
+  delete mutexThreads;
+  delete semaphoreMain;
   delete [] pageTable;
   AddrSpace::nbAddrSpaces--;
   
