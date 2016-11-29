@@ -18,8 +18,17 @@ La dernière partie du projet Nachos consiste en la mise en place d'un système 
 Points délicats
 ---------------
 
+L'implémentation de l'appel système ForkExec nous a demandé un peu plus de réflexion que le reste: 
+
+-   Après avoir créé l'espace d'adressage du processus à créer (`do_ForkExec` dans le fichier `userthread.cc`), il est nécessaire de démarrer son thread principal grâce à la fonction `StartForkExec`.
+-   La fonction `StartForkExec` est chargée d'initialiser les registres du processus (notamment les registres PCReg et NextPCReg), et de lancer le processus.
+
 Limitations
 -----------
-Les bonus n'ont pas été traités. Il faut modifier à la main le nombre de page maximum (A PRECISER LE NOM ET LA LOCALISATION) et la taille maximale attribuée à chaque processus (A PRECISER LE NOM ET LA LOCALISATION)
+
+Les bonus n'ont pas été traités.
+
+Il faut modifier à la main, avant la compilation, le nombre de page physiques (`NumPhysPages` dans `machine.h`) et l'espace réservé aux piles de chaque processus (`UserStacksAreaSize` dans `addrspace.h`)
+
 Tests
 -----
