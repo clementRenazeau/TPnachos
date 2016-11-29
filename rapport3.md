@@ -11,13 +11,15 @@ La dernière partie du projet Nachos consiste en la mise en place d'un système 
 -   travaillé sur la copie d'une page octet par octet,
 -   ajouté une classe `PageProvider` qui va se charger de gérer la mémoire et l'allocation des pages,
 -   mis en place un nouvel appel système pour pouvoir garder plusieurs programme en mémoire,
--   des tests 
+-   fait quelques tests pour générer un grand nombre de processus et de threads en même temps.
+
+
 
 Points délicats
 ---------------
 
 Limitations
 -----------
-
+Les bonus n'ont pas été traités. Il faut modifier à la main le nombre de page maximum (A PRECISER LE NOM ET LA LOCALISATION) et la taille maximale attribuée à chaque processus (A PRECISER LE NOM ET LA LOCALISATION)
 Tests
 -----
